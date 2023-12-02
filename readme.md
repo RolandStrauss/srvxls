@@ -1,10 +1,6 @@
-## Example of dynamic array in IBMi RPG
+## Microsoft Excel Services
 
-This is a simple example of how to create a dynamic array in RPG.
+** Description :**
+   Service procedures to read Microsoft Excel Workbook data.
+   Open Source service program XLPARSE4 used - Scott Klement and Spaghettiman - Giovanni Perotti.
 
-## Changes made
-## 16.06.23 Put all procedures into a service program.
-## 16.06.23 New example using procedures of service program.
-
-It is necesary to create the binding directory and add the *SRVPGM object created, before 
-compiling the example01.pgm.rpgle object.
