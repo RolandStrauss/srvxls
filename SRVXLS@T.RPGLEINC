@@ -1,0 +1,140 @@
+**free
+// --------------------------------------------------------------------------------------------------
+// Copybook Member;
+//   Name : SRVXLS@T : Microsoft Excel - Templates
+//   Type : Copybook
+// Description :
+//   Data structures and internal prototypes used by Excel Services.
+// --------------------------------------------------------------------------------------------------
+// Date        Developer         Change
+// 2019-01-15  Nico Basson       Initial Code
+// --------------------------------------------------------------------------------------------------
+/IF NOT defined(SRVXLS)
+/EOF
+/ENDIF
+
+// --------------------------------------------------------------------------------------------------
+// Internal Function Prototypes oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
+// --------------------------------------------------------------------------------------------------
+// Free Local Reference oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
+dcl-pr f_FreeLocalRef ;
+   i_localRef  object( *java : 'java.lang.Object' ) value ;
+end-pr ;
+// Java Cleanup oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
+dcl-pr f_CleanupJAVA ;
+end-pr ;
+
+// --------------------------------------------------------------------------------------------------
+// Java Class Constants jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj
+// --------------------------------------------------------------------------------------------------
+dcl-c WORKBOOK_CLASS          'org.apache.poi.ss.usermodel.Workbook'           ;
+dcl-c XSSF_WORKBOOK_CLASS     'org.apache.poi.xssf.usermodel.XSSFWorkbook'     ;
+dcl-c HSSF_WORKBOOK_CLASS     'org.apache.poi.hssf.usermodel.HSSFWorkbook'     ;
+// --------------------------------------------------
+dcl-c SHEET_CLASS             'org.apache.poi.ss.usermodel.Sheet'              ;
+dcl-c ROW_CLASS               'org.apache.poi.ss.usermodel.Row'                ;
+dcl-c CELL_CLASS              'org.apache.poi.ss.usermodel.Cell'               ;
+// --------------------------------------------------
+dcl-c CELLSTYLE_CLASS         'org.apache.poi.ss.usermodel.CellStyle'          ;
+dcl-c XSSF_CELLSTYLE_CLASS    'org.apache.poi.xssf.usermodel.XSSFCellStyle'    ;
+dcl-c CELLRANGEADDRESS_CLASS  'org.apache.poi.ss.util.CellRangeAddress'        ;
+// --------------------------------------------------
+dcl-c FONT_CLASS              'org.apache.poi.ss.usermodel.Font'               ;
+dcl-c XSSF_FONT_CLASS         'org.apache.poi.xssf.usermodel.XSSFFont'         ;
+dcl-c DATAFORMAT_CLASS        'org.apache.poi.ss.usermodel.DataFormat'         ;
+// Images ------------------------------------------
+dcl-c ANCHOR_CLASS            'org.apache.poi.ss.usermodel.ClientAnchor'       ;
+dcl-c HELPER_CLASS            'org.apache.poi.ss.usermodel.CreationHelper'     ;
+dcl-c DRAWING_CLASS           'org.apache.poi.ss.usermodel.Drawing'            ;
+dcl-c DIMIMAGE_CLASS          'org.apache.poi.ss.examples.AddDimensionedImage' ;
+// Images ------------------------------------------
+dcl-c URL_CLASS               'java.net.URL'                                   ;
+
+// --------------------------------------------------------------------------------------------------
+// Cell Style Prototypes ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
+// --------------------------------------------------------------------------------------------------
+// Create Default Style Objects oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
+dcl-pr f_CrtDftStyles ;
+end-pr ;
+// Reset All Styles oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
+dcl-pr f_ResetStyle ;
+end-pr ;
+// Set Number Format in Cell Style Java Object ooooooooooooooooooooooooooooooooooooooooooooooooooooo
+dcl-pr f_NumberFormat ;
+   b_CellStyle  object( *java : CellStyle_class ) ;
+   i_NbrFmt     varchar(1024)                     const ;
+end-pr ;
+// Set Font Style in Cell Style Java Object oooooooooooooooooooooooooooooooooooooooooooooooooooooooo
+dcl-pr f_StyleFont ;
+   b_CellStyle   object( *java : CellStyle_class ) ;
+   i_Bold        ind                               value ;
+   i_Italic      ind                               value ;
+   i_Underline   ind                               value ;
+   i_FontSize    int(5)                            value ;
+   i_FontName    varchar(64)                       value ;
+   i_FontRGB     char(11)                          const ;
+   i_StrikeOut   ind                               value ;
+end-pr ;
+// Set Text Alignment in Cell Style Java Object oooooooooooooooooooooooooooooooooooooooooooooooooooo
+dcl-pr f_Alignment ;
+   b_CellStyle  object( *java : CellStyle_class ) ;
+   i_Align      char(1)                           const ;
+end-pr ;
+// Set Text Wrapping in Cell Style Java Object ooooooooooooooooooooooooooooooooooooooooooooooooooooo
+dcl-pr f_WrapText ;
+   b_CellStyle  object( *java : CellStyle_class ) ;
+   i_WrapText   ind                               const ;
+end-pr ;
+// Set Cell Borders Cell Style Java Object ooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
+// Line Styles -------------------------------------
+// Dash Dot     (-.)          9                    1
+// Dash Dot Dot (-..)        11                    2
+// Dashed       (-)           3                    3
+// Dotted       (...)         7                    4
+// Double       (=)           6                    5
+// Hair         (?)           4                    6
+// Medium                     2                    7
+// Medium Dash Dot           10                    8
+// Medium Dash Dot Dot       12                    9
+// Medium Dashed              8                   10
+// Thin                       1                   11
+// None                       0                   12
+// --------------------------------------------------------------------------------------------------
+dcl-pr f_CellBorder ;
+   b_CellStyle   object( *java : CellStyle_class ) ;
+   i_BorderTop   ind                              const ;
+   i_BorderBot   ind                              const ;
+   i_BorderLeft  ind                              const ;
+   i_BorderRight ind                              const ;
+   i_StyleTop    int(3)                           const ;
+   i_StyleBot    int(3)                           const ;
+   i_StyleLeft   int(3)                           const ;
+   i_StyleRight  int(3)                           const ;
+end-pr ;
+// Set Cell Background Colour and Pattern oooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
+// Fill Pattern ------------------------------------
+// PATTERN_NO_FILL                  0
+// PATTERN_SOLID_FOREGROUND         1
+// PATTERN_FINE_DOTS                2
+// PATTERN_ALT_BARS                 3
+// PATTERN_SPARSE_DOTS              4
+// THICK_HORZ_BANDS                 5
+// THICK_VERT_BANDS                 6
+// THICK_BACKWARD_DIAG              7
+// THICK_FORWARD_DIAG               8
+// PATTERN_BIG_SPOTS                9
+// PATTERN_BRICKS                   10
+// THIN_HORZ_BANDS                  11
+// THIN_VERT_BANDS                  12
+// THIN_BACKWARD_DIAG               13
+// THIN_FORWARD_DIAG                14
+// PATTERN_SQUARES                  15
+// PATTERN_DIAMONDS                 16
+// --------------------------------------------------
+dcl-pr f_CellFill ;
+   b_CellStyle  object( *java : CellStyle_class ) ;
+   i_Pattern    int(5)                            const ;
+   i_BackRGB    char(11)                          const ;
+   i_ForeRGB    char(11)                          const ;
+end-pr ;
+

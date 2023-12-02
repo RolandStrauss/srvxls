@@ -1,0 +1,104 @@
+/*------------------------------------------------------------------------------------------------*/
+/* Service Program:                                                                               */
+/*   Name : SRVXLS : Framework - Microsoft Excel Services                                         */
+/* Description:                                                                                   */
+/*   Microsoft Excel Services                                                                     */
+/*------------------------------------------------------------------------------------------------*/
+/*   Pre-Compiler tags used by STRPREPRC to retrieve creation                                     */
+/*   commands from the source member.                                                             */
+/*------------------------------------------------------------------------------------------------*/
+/* >>PRE-COMPILER<<                                                                               */
+/*   >>CRTCMD<< CRTSRVPGM             +                                                           */
+/*                SRVPGM(&LI/SRVXLS)  +                                                           */
+/*                MODULE(             +                                                           */
+/*                       SRVXLS@01    +                                                           */
+/*                       SRVXLS@02    +                                                           */
+/*                       SRVXLS@AA    +                                                           */
+/*                       SRVXLS@AU    +                                                           */
+/*                       SRVXLS@10    +                                                           */
+/*                       SRVXLS@11    +                                                           */
+/*                       SRVXLS@12    +                                                           */
+/*                       SRVXLS@13    +                                                           */
+/*                       SRVXLS@14    +                                                           */
+/*                       SRVXLS@SH    +                                                           */
+/*                       SRVXLS@SP    +                                                           */
+/*                       SRVXLS@20    +                                                           */
+/*                      )             +                                                           */
+/*                SRCFILE(&SL/&SF)    +                                                           */
+/*                SRCMBR(&SM)         +                                                           */
+/*                BNDSRVPGM(          +                                                           */
+/*                         FWKERR     +                                                           */
+/*                         FWKGEN     +                                                           */
+/*                         FWKIFS     +                                                           */
+/*                         FWKJAVA    +                                                           */
+/*                         XLPARSER4  +                                                           */
+/*                         HSSFR4     +                                                           */
+/*                         )          +                                                           */
+/*                TEXT('&U0') ;                                                                   */
+/*   >>COMPILE<<                                                                                  */
+/*     >>PARM<< EXPORT(*SRCFILE) ;                                                                */
+/*     >>PARM<< ACTGRP(*CALLER)  ;                                                                */
+/*     >>PARM<< ALWUPD(*YES)     ;                                                                */
+/*     >>PARM<< ALWLIBUPD(*YES)  ;                                                                */
+/*     >>PARM<< USRPRF(*OWNER)   ;                                                                */
+/*     >>PARM<< AUT(*USE)        ;                                                                */
+/*     >>PARM<< TGTRLS(*CURRENT) ;                                                                */
+/*     >>PARM<< STGMDL(*INHERIT) ;                                                                */
+/*     >>PARM<< ARGOPT(*YES)     ;                                                                */
+/*   >>END-COMPILE<<                                                                              */
+/*   >>EXECUTE<<                                                                                  */
+/* >>END-PRE-COMPILER<<                                                                           */
+/*------------------------------------------------------------------------------------------------*/
+/* Date        Developer         Change                                                           */
+/* 2018-06-13  Nico Basson       Initial Code.                                                    */
+/* 2019-01-03  Nico Basson       Add Excel rendering.                                             */
+/*------------------------------------------------------------------------------------------------*/
+  STRPGMEXP  PGMLVL(*CURRENT) SIGNATURE('Version 1.00')
+
+/* SRVXLS@01 - Microsoft Excel Sheet Parsing -----------------------------------------------------*/
+    EXPORT   SYMBOL('SRVXLS@01_xls_ParseWorkbook')
+    EXPORT   SYMBOL('SRVXLS@01_xls_ParseSheet')
+
+/* SRVXLS@02 - Microsoft Excel - Utilities -------------------------------------------------------*/
+    EXPORT   SYMBOL('SRVXLS@02_xls_Colnum')
+    EXPORT   SYMBOL('SRVXLS@02_xls_CellName')
+
+/* SRVXLS@10 - Microsoft Excel - Create ----------------------------------------------------------*/
+    EXPORT   SYMBOL('SRVXLS@10_xls_OpenWorkbook')
+    EXPORT   SYMBOL('SRVXLS@10_xls_SaveWorkbook')
+    EXPORT   SYMBOL('SRVXLS@10_xls_AddSheet')
+    EXPORT   SYMBOL('SRVXLS@10_xls_RmvSheet')
+    EXPORT   SYMBOL('SRVXLS@10_xls_OpenSheet')
+    EXPORT   SYMBOL('SRVXLS@10_xls_AddRow')
+    EXPORT   SYMBOL('SRVXLS@10_xls_GetRow')
+
+/* SRVXLS@11 - Microsoft Excel - Cells -----------------------------------------------------------*/
+    EXPORT   SYMBOL('SRVXLS@11_xls_TextCell')
+    EXPORT   SYMBOL('SRVXLS@11_xls_NumCell')
+    EXPORT   SYMBOL('SRVXLS@11_xls_DateCell')
+    EXPORT   SYMBOL('SRVXLS@11_xls_FormulaCell')
+    EXPORT   SYMBOL('SRVXLS@11_xls_MergeCells')
+    EXPORT   SYMBOL('SRVXLS@11_xls_CellValue')
+    EXPORT   SYMBOL('SRVXLS@11_xls_SwitchAutoWidth')
+
+/* SRVXLS@12 - Microsoft Excel - Style and Formatting --------------------------------------------*/
+    EXPORT   SYMBOL('SRVXLS@12_xls_ColWidth')
+    EXPORT   SYMBOL('SRVXLS@12_xls_AutoColWidth')
+    EXPORT   SYMBOL('SRVXLS@12_xls_ClearStyle')
+    EXPORT   SYMBOL('SRVXLS@12_xls_SetFont')
+    EXPORT   SYMBOL('SRVXLS@12_xls_SetNbrFormat')
+    EXPORT   SYMBOL('SRVXLS@12_xls_SetAlignment')
+    EXPORT   SYMBOL('SRVXLS@12_xls_SetWrapText')
+    EXPORT   SYMBOL('SRVXLS@12_xls_SetBorder')
+    EXPORT   SYMBOL('SRVXLS@12_xls_SetCellFill')
+
+/* SRVXLS@13 - Microsoft Excel - Pictures --------------------------------------------------------*/
+    EXPORT   SYMBOL('SRVXLS@13_xls_AddImage')
+
+/* SRVXLS@14 - Microsoft Excel - Formula Functions -----------------------------------------------*/
+    EXPORT   SYMBOL('SRVXLS@14_xls_SUM')
+
+/* SRVXLS@20 - Microsoft Excel - Standard Headers ------------------------------------------------*/
+    EXPORT   SYMBOL('SRVXLS@20_xls_StdHdrLogo')
+
+  ENDPGMEXP

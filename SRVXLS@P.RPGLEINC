@@ -1,0 +1,243 @@
+**free
+// --------------------------------------------------------------------------------------------------
+// Copybook Member;
+//   Name : SRVXLS@P : Framework - IFS Services - Prototypes
+//   Type : Copybook
+// Description :
+//   Framework Prototypes
+// --------------------------------------------------------------------------------------------------
+// Date        Developer         Change
+// 2018-03-13  Nico Basson       Initial Code
+// --------------------------------------------------------------------------------------------------
+/IF NOT defined(SRVXLS)
+/EOF
+/ENDIF
+
+// Dependent Framework Prototypes ------------------------------------------------------------------
+/DEFINE SRVJAVA
+/DEFINE SRVIFS
+
+// Dependent Framework Templates -------------------------------------------------------------------
+/INCLUDE SRVSRC,SRV@T
+
+// King Price RGB Colour Palette CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+dcl-c #5A5A5A  '90,90,90'  ;
+dcl-c #AB2328  '171,35,40' ;
+dcl-c #FFFFFF  '255,255,255' ;
+
+// SRVXLS@01 - Microsoft Excel Sheet Parsing -------------------------------------------------------
+// Parse the contents of an .xls/.xlsx workbook <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+dcl-pr xls_ParseWorkbook extproc('SRVXLS@01_xls_ParseWorkbook') ;
+   i_Directory     varchar(512)   const ;
+   i_ExcelDoc      varchar(512)   const ;
+   i_CellProc@     pointer(*proc) const ;
+   i_NewRowProc@   pointer(*proc) const options( *omit : *nopass ) ;
+   i_EndRowProc@   pointer(*proc) const options( *omit : *nopass ) ;
+end-pr ;
+// Parse the contents of an .xls/.xlsx workbook sheet <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+dcl-pr xls_ParseSheet extproc('SRVXLS@01_xls_ParseSheet') ;
+   i_Directory     varchar(512)   const ;
+   i_ExcelDoc      varchar(512)   const ;
+   i_Sheet         varchar(512)   const ;
+   i_CellProc@     pointer(*proc) const ;
+   i_NewRowProc@   pointer(*proc) const options( *omit : *nopass ) ;
+   i_EndRowProc@   pointer(*proc) const options( *omit : *nopass ) ;
+end-pr ;
+
+// SRVXLS@02 - Microsoft Excel - Utilities ---------------------------------------------------------
+// Return the number of an alpha column (Microsoft Excel) <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+dcl-pr xls_Colnum int(5) extproc('SRVXLS@02_xls_Colnum') ;
+   i_Column char(3) const ;
+end-pr ;
+// Returns the Cell Name for POI y,x coordinates <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+dcl-pr xls_CellName varchar(16) extproc('SRVXLS@02_xls_CellName') ;
+   i_Row  int(5) value ;
+   i_Col  int(5) value ;
+end-pr ;
+
+// SRVXLS@10 - Microsoft Excel - Create ------------------------------------------------------------
+// Open a .xlsx (XSSF) Workbook <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+dcl-pr xls_OpenWorkbook extproc('SRVXLS@10_xls_OpenWorkbook') ;
+   i_ExcelDoc     varchar(512) const ;
+   i_Directory    varchar(512) const ;
+   i_Create       ind          const options( *omit : *nopass ) ;
+end-pr ;
+// Save .xlsx (XSSF) Workbook <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+dcl-pr xls_SaveWorkbook extproc('SRVXLS@10_xls_SaveWorkbook') ;
+   i_Replace      ind          const options( *omit : *nopass ) ;
+end-pr ;
+// Open Sheet in .xlsx (XSSF) Workbook <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+dcl-pr xls_OpenSheet extproc('SRVXLS@10_xls_OpenSheet') ;
+   i_SheetName    varchar(128) const ;
+   i_CrtSheet     ind          const options( *omit : *nopass ) ;
+end-pr ;
+// Add Sheet to .xlsx (XSSF) Workbook <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+dcl-pr xls_AddSheet extproc('SRVXLS@10_xls_AddSheet') ;
+   i_SheetName    varchar(128) const ;
+   i_Replace      ind          const options( *omit : *nopass ) ;
+end-pr ;
+// Remove Sheet from .xlsx (XSSF) Workbook <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+dcl-pr xls_RmvSheet  extproc('SRVXLS@10_xls_RmvSheet') ;
+   i_SheetName  varchar(128) const options( *omit : *nopass ) ;
+end-pr ;
+// Add Row to Sheet <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+dcl-pr xls_AddRow int(10) extproc('SRVXLS@10_xls_AddRow') ;
+   i_RowNumber    int(10)      const options( *omit : *nopass ) ;
+   i_SheetName    varchar(128) const options( *omit : *nopass ) ;
+end-pr ;
+// Get Row from Sheet <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+dcl-pr xls_GetRow extproc('SRVXLS@10_xls_GetRow') ;
+   i_RowNumber  int(10)      const ;
+   i_Create     ind          const options( *omit : *nopass ) ;
+   i_SheetName  varchar(128) const options( *omit : *nopass ) ;
+end-pr ;
+
+// SRVXLS@11 - Microsoft Excel - Cells -------------------------------------------------------------
+// Insert Text Value into Cell <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+dcl-pr xls_TextCell int(5) extproc('SRVXLS@11_xls_TextCell') ;
+   i_Value        varchar(4096) const ;
+   i_ColNumber    int(5)        const options( *omit : *nopass ) ;
+   i_RowNumber    int(10)       const options( *omit : *nopass ) ;
+   i_AutoWidth    ind           const options( *omit : *nopass ) ;
+end-pr ;
+// Insert Numeric Value into Cell <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+dcl-pr xls_NumCell int(5) extproc('SRVXLS@11_xls_NumCell') ;
+   i_Number       float(8)      value ;
+   i_ColNumber    int(5)        const options( *omit : *nopass ) ;
+   i_RowNumber    int(10)       const options( *omit : *nopass ) ;
+   i_AutoWidth    ind           const options( *omit : *nopass ) ;
+end-pr ;
+// Insert Date into Cell <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+dcl-pr xls_DateCell int(5) extproc('SRVXLS@11_xls_DateCell') ;
+   i_Date         date          value ;
+   i_ColNumber    int(5)        const options( *omit : *nopass ) ;
+   i_RowNumber    int(10)       const options( *omit : *nopass ) ;
+   i_AutoWidth    ind           const options( *omit : *nopass ) ;
+end-pr ;
+// Insert Formula into Cell <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+dcl-pr xls_FormulaCell int(5) extproc('SRVXLS@11_xls_FormulaCell') ;
+   i_Formula      varchar(4096) const ;
+   i_ColNumber    int(5)        const options( *omit : *nopass ) ;
+   i_RowNumber    int(10)       const options( *omit : *nopass ) ;
+   i_AutoWidth    ind           const options( *omit : *nopass ) ;
+end-pr ;
+// Merge Cells on a Sheet <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+dcl-pr xls_MergeCells extproc('SRVXLS@11_xls_MergeCells') ;
+   i_RowFrom      int(5)       const options( *omit : *nopass ) ;
+   i_ColFrom      int(5)       const options( *omit : *nopass ) ;
+   i_RowTo        int(5)       const options( *omit : *nopass ) ;
+   i_ColTo        int(5)       const options( *omit : *nopass ) ;
+end-pr ;
+// Return Cell Value <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+dcl-pr xls_CellValue varchar(1024) extproc('SRVXLS@11_xls_CellValue') ;
+   i_ColNumber    int(5)        const options( *omit : *nopass ) ;
+   i_RowNumber    int(10)       const options( *omit : *nopass ) ;
+   o_DataType     char(1)             options( *omit : *nopass ) ;
+end-pr ;
+// Switch Auto Size Column Width On or Off <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+dcl-pr xls_SwitchAutoWidth extproc('SRVXLS@11_xls_SwitchAutoWidth') ;
+   i_AutoWidth  ind const ;
+end-pr ;
+
+// SRVXLS@12 - Microsoft Excel - Style and Formatting ----------------------------------------------
+// Set Column Width <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+dcl-pr xls_ColWidth extproc('SRVXLS@12_xls_ColWidth') ;
+   i_Width        int(5)       const ;
+   i_ColNumber    int(5)       const options( *omit : *nopass ) ;
+   i_SheetName    varchar(128) const options( *omit : *nopass ) ;
+end-pr ;
+// Auto Size Column Width <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+dcl-pr xls_AutoColWidth extproc('SRVXLS@12_xls_AutoColWidth') ;
+   i_Switch       ind    const ;
+   i_UseMerged    ind    const options( *omit : *nopass ) ;
+end-pr ;
+// Clear Style (Delete User Style Object) <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+dcl-pr xls_ClearStyle extproc('SRVXLS@12_xls_ClearStyle') ;
+end-pr ;
+// Set Font <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+dcl-pr xls_SetFont extproc('SRVXLS@12_xls_SetFont') ;
+   i_Bold        ind           const options( *omit : *nopass ) ;
+   i_Italic      ind           const options( *omit : *nopass ) ;
+   i_Underline   ind           const options( *omit : *nopass ) ;
+   i_FontSize    int(5)        const options( *omit : *nopass ) ;
+   i_FontName    varchar(64)   const options( *omit : *nopass ) ;
+   i_FontRGB     char(11)      const options( *omit : *nopass ) ;
+   i_StrikeOut   ind           const options( *omit : *nopass ) ;
+end-pr ;
+// Set Number Format <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+dcl-pr xls_SetNbrFormat extproc('SRVXLS@12_xls_SetNbrFormat') ;
+   i_NbrFmt  varchar(1024) const ;
+end-pr ;
+// Set Alignment <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+dcl-pr xls_SetAlignment extproc('SRVXLS@12_xls_SetAlignment') ;
+   i_Align  char(1) const ;
+end-pr ;
+// Set Text Wrapping <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+dcl-pr xls_SetWrapText extproc('SRVXLS@12_xls_SetWrapText') ;
+   i_WrapText  ind const ;
+end-pr ;
+// Set Cell Borders <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+dcl-pr xls_SetBorder extproc('SRVXLS@12_xls_SetBorder') ;
+   i_BorderTop   ind    const options( *omit : *nopass ) ;
+   i_BorderBot   ind    const options( *omit : *nopass ) ;
+   i_BorderLeft  ind    const options( *omit : *nopass ) ;
+   i_BorderRight ind    const options( *omit : *nopass ) ;
+   i_StyleTop    int(3) const options( *omit : *nopass ) ;
+   i_StyleBot    int(3) const options( *omit : *nopass ) ;
+   i_StyleLeft   int(3) const options( *omit : *nopass ) ;
+   i_StyleRight  int(3) const options( *omit : *nopass ) ;
+end-pr ;
+// Set Cell Fill Colours and Pattern <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+// Fill Pattern ------------------------------------
+// PATTERN_NO_FILL                  0
+// PATTERN_SOLID_FOREGROUND         1
+// PATTERN_FINE_DOTS                2
+// PATTERN_ALT_BARS                 3
+// PATTERN_SPARSE_DOTS              4
+// THICK_HORZ_BANDS                 5
+// THICK_VERT_BANDS                 6
+// THICK_BACKWARD_DIAG              7
+// THICK_FORWARD_DIAG               8
+// PATTERN_BIG_SPOTS                9
+// PATTERN_BRICKS                   10
+// THIN_HORZ_BANDS                  11
+// THIN_VERT_BANDS                  12
+// THIN_BACKWARD_DIAG               13
+// THIN_FORWARD_DIAG                14
+// PATTERN_SQUARES                  15
+// PATTERN_DIAMONDS                 16
+// --------------------------------------------------
+dcl-pr xls_SetCellFill extproc('SRVXLS@12_xls_SetCellFill') ;
+   i_Pattern    int(5)   const options( *omit : *nopass ) ;
+   i_BackRGB    char(11) const options( *omit : *nopass ) ;
+   i_ForeRGB    char(11) const options( *omit : *nopass ) ;
+end-pr ;
+
+// SRVXLS@13 - Microsoft Excel - Pictures ----------------------------------------------------------
+// Add Image to Sheet <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+dcl-pr xls_AddImage extproc('SRVXLS@13_xls_AddImage') ;
+   i_Picture     varchar(512) const ;
+   i_Directory   varchar(512) const ;
+   i_Row         int(10)      const ;
+   i_Col         int(10)      const ;
+   i_Width       int(10)      const options( *omit : *nopass ) ;
+   i_Height      int(10)      const options( *omit : *nopass ) ;
+   i_KeepAspect  ind          const options( *omit : *nopass ) ;
+end-pr ;
+
+// SRVXLS@14 - Microsoft Excel - Formula Functions -------------------------------------------------
+// Column SUM() <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+dcl-pr xls_SUM extproc('SRVXLS@14_xls_SUM') ;
+   i_StartRow   int(10) const ;
+   i_EndRow     int(10) const ;
+   i_FromCol    int(5)  const ;
+   i_ToCol      int(5)  const options( *omit : *nopass ) ;
+   i_TargetRow  int(10) const options( *omit : *nopass ) ;
+end-pr ;
+
+// SRVXLS@20 - Microsoft Excel - Standard Headers --------------------------------------------------
+// Add Standard Outsource Company (UMA) Logo to Sheet <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+dcl-pr xls_StdHdrLogo extproc('SRVXLS@20_xls_StdHdrLogo') ;
+   i_Outsource  packed(3) const ;
+end-pr ;
+
