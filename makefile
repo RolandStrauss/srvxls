@@ -1,77 +1,65 @@
 
-BIN_LIB=CMPSYS
-LIBLIST=$(BIN_LIB) COBRA COBRAS BBLIB
+BIN_LIB=$(LIBRARY)
+LIBRARY=LSUTILS
+LIBLIST=$(LIBRARY) LSUTILSDEV BBLIB
 SHELL=/QOpenSys/usr/bin/qsh
+SYSTEM_PARMS=-s
 
-all: wmssrv.srv.sqlrpgle wms_db_bld.sqlrpgle wmsdriver.pgm.sqlrpgle wms001a.pgm.sqlrpgle wms001b.pgm.sqlrpgle wms001c.pgm.sqlrpgle wms002a.pgm.sqlrpgle wms002b.pgm.sqlrpgle wms010.pgm.sqlrpgle wms011.pgm.sqlrpgle wms011a.pgm.sqlrpgle wms012.pgm.sqlrpgle wms013.pgm.sqlrpgle wms014.pgm.sqlrpgle wms015.pgm.sqlrpgle wms016.pgm.sqlrpgle wms020a.pgm.sqlrpgle wms020b.pgm.sqlrpgle wms020c.pgm.sqlrpgle wms020d.pgm.sqlrpgle wms021.pgm.sqlrpgle wms030.pgm.sqlrpgle
+all: srvxls.bnddir srvxls.srv.sqlrpgle srvxls@p.rpgleinc srvxls@t.rpgleinc srvxls@01.mod.rpgle srvxls@02.mod.rpgle srvxls@10.mod.rpgle srvxls@11.mod.rpgle srvxls@01.mod.rpgle srvxls@12.mod.rpgle srvxls@13.mod.rpgle srvxls@14.mod.rpgle srvxls@20.mod.rpgle  srvxls@aa.mod.rpgle srvxls@au.mod.rpgle srvxls@sh.mod.rpgle  srvxls@sp.mod.rpgle
 
 ## Targets
 
-wmssrv.srv.sqlrpgle: wmssrv.bnd wmssrv.cb.rpgle wmssrv.pr.rpgle
-
-wms001a.pgm.sqlrpgle: wms001a.dspf
-wms001b.pgm.sqlrpgle: wms001b.dspf
-wms001c.pgm.sqlrpgle: wms001c.dspf
-
-wms002a.pgm.sqlrpgle: wms002a.dspf
-wms002b.pgm.sqlrpgle: wms002b.dspf
-
-wms010.pgm.sqlrpgle: wms010.dspf
-
-wms011.pgm.sqlrpgle: wms011.dspf
-wms011a.pgm.sqlrpgle: wms011a.dspf
-
-wms012.pgm.sqlrpgle: wms012.dspf
-
-wms013.pgm.sqlrpgle: wms013.dspf
-
-wms014.pgm.sqlrpgle: wms014.dspf
-
-wms015.pgm.sqlrpgle: wms015.dspf
-
-wms016.pgm.sqlrpgle: wms016.dspf
-
-wms020a.pgm.sqlrpgle: wms020a.dspf
-wms020b.pgm.sqlrpgle: wms020b.dspf
-wms020c.pgm.sqlrpgle: wms020c.dspf
-wms020d.pgm.sqlrpgle: wms020d.dspf
-wms021.pgm.sqlrpgle: wms021.dspf
-
-wms030.pgm.sqlrpgle: wms030.dspf
+srvxls.srv.sqlrpgle: srvxls.bnd srvxls@01.mod.rpgle srvxls@02.mod.rpgle srvxls@10.mod.rpgle srvxls@11.mod.rpgle srvxls@01.mod.rpgle srvxls@12.mod.rpgle srvxls@13.mod.rpgle srvxls@14.mod.rpgle srvxls@20.mod.rpgle  srvxls@aa.mod.rpgle srvxls@au.mod.rpgle srvxls@sh.mod.rpgle  srvxls@sp.mod.rpgle
 
 ## Rules
    ## system "CRTRPGMOD MODULE($(BIN_LIB)/$*) SRCSTMF('/home/ROLAND/builds/LSPS-1162/QRPGLESRC/$*.pgm.rpgle') DBGVIEW(*SOURCE) OPTION(*EVENTF)"
 
-%.cb.rpgle: qrpglesrc/%.cb.rpgle
+%.rpgleinc: qrpglesrc/%.rpgleinc
 	system -s "CHGATR OBJ('$<') ATR(*CCSID) VALUE(1252)"
 	@touch $@
 
-%.pr.rpgle: qrpglesrc/%.pr.rpgle
+%.rpgleinc: qrpglesrc/%.rpgleinc
 	system -s "CHGATR OBJ('$<') ATR(*CCSID) VALUE(1252)"
 	@touch $@
 	
 %.pgm.rpgle: qrpglesrc/%.pgm.rpgle
 	system -s "CHGATR OBJ('$<') ATR(*CCSID) VALUE(1252)"
-	system "CPYFRMSTMF FROMSTMF('./qrpglesrc/$*.rpgle') TOMBR('/QSYS.lib/$(BIN_LIB).lib/QRPGLESRC.file/$*.mbr') MBROPT(*REPLACE)"
-	SDMIM/ISETLIBL ENV(PDSCOBDEV) CMD(SDMIM/ICOMPPDM MBROBJ($*) LIBRARY($(BIN_LIB)) SRCF(QRPGLESRC) SUBMIT(*NO)) LIB1(BBLIB) 
+	liblist -a $(LIBLIST);\
+	system "CRTRPGMOD MODULE($(BIN_LIB)/$*) SRCSTMF('$<') DBGVIEW(*SOURCE) OPTION(*EVENTF)"
+	system "CRTPGM PGM($(BIN_LIB)/$*) MODULE($(BIN_LIB)/$*) ACTGRP(*NEW)"
 	@touch $@
-	
+
+%.mod.rpgle: qrpglesrc/%.mod.rpgle
+	system $(SYSTEM_PARMS) "CHGATR OBJ('$<') ATR(*CCSID) VALUE(1252)"
+	liblist -a $(LIBLIST);\
+	system $(SYSTEM_PARMS) "CRTRPGMOD MODULE($(BIN_LIB)/$*) SRCSTMF('$<') DBGVIEW(*SOURCE) OPTION(*EVENTF)"
+
 %.pgm.sqlrpgle: qrpglesrc/%.pgm.sqlrpgle
 	system -s "CHGATR OBJ('$<') ATR(*CCSID) VALUE(1252)"
-	system "CPYFRMSTMF FROMSTMF('./qrpglesrc/$*.sqlrpgle') TOMBR('/QSYS.lib/$(BIN_LIB).lib/QRPGLESRC.file/$*.mbr') MBROPT(*REPLACE)"
-	SDMIM/ISETLIBL ENV(PDSCOBDEV) CMD(SDMIM/ICOMPPDM MBROBJ($*) LIBRARY($(BIN_LIB)) SRCF(QRPGLESRC) SUBMIT(*NO)) LIB1(BBLIB) 
+	liblist -a $(LIBLIST);\
+	system "CRTSQLRPGI OBJ($(BIN_LIB)/$*) SRCSTMF('$<') OBJTYPE(*MODULE) OPTION(*EVENTF) RPGPPOPT(*LVL2) DBGVIEW(*SOURCE)"
+	system "CRTPGM PGM($(BIN_LIB)/$*) MODULE($(BIN_LIB)/$*) ACTGRP(*NEW)"
 	@touch $@	
+
+%.mod.sqlrpgle: qrpglesrc/%.mod.sqlrpgle
+	system $(SYSTEM_PARMS) "CHGATR OBJ('$<') ATR(*CCSID) VALUE(1252)"
+	liblist -a $(LIBLIST);\
+	system $(SYSTEM_PARMS) "CRTSQLRPGI OBJ($(BIN_LIB)/$*) SRCSTMF('$<') CLOSQLCSR(*ENDMOD) OPTION(*EVENTF) DBGVIEW(*SOURCE) OBJTYPE(*MODULE) RPGPPOPT(*LVL2) "
 
 %.srv.rpgle: qrpglesrc/%.srv.rpgle
 	system -s "CHGATR OBJ('$<') ATR(*CCSID) VALUE(1252)"
-	system "CPYFRMSTMF FROMSTMF('./qrpglesrc/$*.rpgle') TOMBR('/QSYS.lib/$(BIN_LIB).lib/QRPGLESRC.file/$*.mbr') MBROPT(*REPLACE)"
-	SDMIM/ISETLIBL ENV(PDSCOBDEV) CMD(SDMIM/ICOMPPDM MBROBJ($*) LIBRARY($(BIN_LIB)) SRCF(QRPGLESRC) SUBMIT(*NO)) LIB1(BBLIB) 
+	liblist -a $(LIBLIST);\
+	system "CRTRPGMOD MODULE($(BIN_LIB)/$*) SRCSTMF('$<') DBGVIEW(*SOURCE) OPTION(*EVENTF)"
+	system "CRTSRVPGM SRVPGM($(BIN_LIB)/$*) MODULE($(BIN_LIB)/$*) EXPORT(*SRCFILE) SRCSTMF('$<')"
+	system "DLTOBJ OBJ($(BIN_LIB)/$*) OBJTYPE(*MODULE)"
 	@touch $@
 	
 %.srv.sqlrpgle: qrpglesrc/%.srv.sqlrpgle
 	system -s "CHGATR OBJ('$<') ATR(*CCSID) VALUE(1252)"
-	system "CPYFRMSTMF FROMSTMF('./qrpglesrc/$*.sqlrpgle') TOMBR('/QSYS.lib/$(BIN_LIB).lib/QRPGLESRC.file/$*.mbr') MBROPT(*REPLACE)"
-	SDMIM/ISETLIBL ENV(PDSCOBDEV) CMD(SDMIM/ICOMPPDM MBROBJ($*) LIBRARY($(BIN_LIB)) SRCF(QRPGLESRC) SUBMIT(*NO)) LIB1(BBLIB)
+	liblist -a $(LIBLIST);\
+	system "CRTSQLRPGI OBJ($(BIN_LIB)/$*) SRCSTMF('$<') OBJTYPE(*MODULE) OPTION(*EVENTF) RPGPPOPT(*LVL2) DBGVIEW(*SOURCE)"
+	system "CRTSRVPGM SRVPGM($(BIN_LIB)/$*) MODULE($(BIN_LIB)/$*) EXPORT(*SRCFILE) SRCSTMF('$<')"
+	system "DLTOBJ OBJ($(BIN_LIB)/$*) OBJTYPE(*MODULE)"
 	@touch $@
 
 %.dspf: qddssrc/%.dspf
@@ -82,25 +70,21 @@ wms030.pgm.sqlrpgle: wms030.dspf
 
 %.sqltabl: qsqlsrc/%.sqltabl
 	liblist -c $(BIN_LIB);\
-	system "CPYFRMSTMF FROMSTMF('./qddssrc/$*.rpgleinc') TOMBR('/QSYS.lib/$(BIN_LIB).lib/QSQLSRC.file/$*.mbr') MBROPT(*REPLACE)"
-	SDMIM/ISETLIBL ENV(PDSCOBDEV) CMD(SDMIM/ICOMPPDM MBROBJ($*) LIBRARY($(BIN_LIB)) SRCF(QSQLSRC) SUBMIT(*NO)) LIB1(BBLIB)
-	@touch $@
-
-%.sql: qsqlsrc/%.sql
-	liblist -c $(BIN_LIB);\
-	system "RUNSQLSTM SRCSTMF('$<') COMMIT(*NONE)"
-	@touch $@
-
-%.table: qsqlsrc/%.table
-	liblist -c $(BIN_LIB);\
 	system "RUNSQLSTM SRCSTMF('$<') COMMIT(*NONE)"
 	@touch $@
 
 %.rpgleinc: qrpgleref/%.rpgleinc
-	system "CPYFRMSTMF FROMSTMF('./qddssrc/$*.rpgleinc') TOMBR('/QSYS.lib/$(BIN_LIB).lib/QRPGLEREF.file/$*.mbr') MBROPT(*REPLACE)"
 	@touch $@
 
 %.bnd: qsrvsrc/%.bnd
 	system -s "CHGATR OBJ('$<') ATR(*CCSID) VALUE(1252)"
-	system "CPYFRMSTMF FROMSTMF('./qddssrc/$*.bnd') TOMBR('/QSYS.lib/$(BIN_LIB).lib/QSRVSRC.file/$*.mbr') MBROPT(*REPLACE)"
 	@touch $@
+
+%.cmd: qcmdsrc/%.cmd
+	-system -q "CRTSRCPF FILE($(BIN_LIB)/QCMDSRC) RCDLEN(112)"
+	system $(SYSTEM_PARMS) "CPYFRMSTMF FROMSTMF('$<') TOMBR('/QSYS.lib/$(BIN_LIB).lib/QCMDSRC.file/$*.mbr') MBROPT(*REPLACE)"
+	system $(SYSTEM_PARMS) "CRTCMD CMD($(BIN_LIB)/$*) PGM($(BIN_LIB)/$*) SRCFILE($(BIN_LIB)/QCMDSRC)"
+
+%.bnddir:
+	-system -q "CRTBNDDIR BNDDIR($(BIN_LIB)/$*)"
+	-system -q "ADDBNDDIRE BNDDIR($(BIN_LIB)/$*) OBJ($(patsubst %.srvpgm,($(BIN_LIB)/% *SRVPGM *DEFER),$^))"
